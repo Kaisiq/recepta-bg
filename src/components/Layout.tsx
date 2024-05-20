@@ -1,11 +1,10 @@
-import { NavLink, Outlet } from "react-router-dom"
+import { NavLink, Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <body>
-    <div>
-      <nav>
-        <ul>
+    <body className="flex flex-col">
+      <nav className="flex flex-row">
+        <ul className="flex gap-2 flex-row">
           <NavLink to="/">Начало</NavLink>
           <NavLink to="/login">Влизане</NavLink>
           <NavLink to="/recipes">Всички рецепти</NavLink>
@@ -13,12 +12,11 @@ const Layout = () => {
           <NavLink to="/users">Потребители</NavLink>
         </ul>
       </nav>
-    </div>
-    <main>
-      <Outlet/>
-    </main>
+      <main className="flex">
+        <Outlet />
+      </main>
     </body>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
