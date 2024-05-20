@@ -10,8 +10,8 @@ const recipeSchema = yup.object().shape({
   photo: yup.string().required(),
   details: yup.string().required(),
   tags: yup.array().of(yup.string()).required(),
-  date: yup.date().required(),
-  lastModified: yup.date().required(),
+  createdAt: yup.date().required(),
+  updatedAt: yup.date().required(),
 });
 
 export type Recipe = yup.InferType<typeof recipeSchema>;

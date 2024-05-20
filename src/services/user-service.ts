@@ -8,29 +8,21 @@ export enum StatusType {
   active = 1, suspended, deactivated,
 }
 
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  password: string;
-  gender: string;
-  role: RoleType;
-  avatar: string;
-  bio: string;
-  status: StatusType;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export const userValidationSchema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  username: yup.string().required('Username is required'),
-  password: yup.string().required('Password is required'),
-  gender: yup.string().required('Gender is required'),
-  role: yup.number().required('Role is required'),
+const userSchema = yup.object().shape({
+  id: yup.number(),
+  name: yup.string(),
+  username: yup.string(),
+  password: yup.string(),
+  gender: yup.string(),
+  role: yup.number().oneOf([1, 2]),
   avatar: yup.string(),
   bio: yup.string(),
+  status: yup.number().oneOf([1,2,3]),
+  createdAt: yup.date(),
+  updatedAt: yup.date(),
 });
+
+export type User = yup.InferType<typeof userSchema>;
 
 
 const server = "http://localhost:3000";

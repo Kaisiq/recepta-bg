@@ -16,7 +16,7 @@ const RecipesPage = () => {
             <img src={recipe.photo} alt={recipe.name} />
             <p>{recipe.details}</p>
             <p>Tags: {recipe.tags.join(', ')}</p>
-            <p>Last Modified: {recipe.lastModified.toLocaleDateString()}</p>
+            <p>Last Modified: {recipe.updatedAt.toLocaleDateString()}</p>
           </div>
         </>
       ))}
