@@ -4,22 +4,26 @@ import Layout from "./components/Layout.tsx";
 import RecipesPage from "./pages/recipes.tsx";
 import { getAllRecipes } from "./services/recipe-service.ts";
 import { LoginPage } from "./pages/login.tsx";
+import RegisterPage from "./pages/register.tsx";
+import UsersPage from "./pages/users.tsx";
+import { findAllUsers } from "./services/user-service.ts";
 
 export const routerOptions : RouteObject = {
     path: "/",
     element: <Layout/>,
     children: [
         {
-            path: "/home",
+            path: "/users",
+            element: <UsersPage/>,
+            loader: findAllUsers
+        },
+        {
+            path: "/logout",
             element: <App/>
         },
         {
-            path: "/about",
-            element: <App/>
-        },
-        {
-            path: "/contact",
-            element: <App/>
+            path: "/register",
+            element: <RegisterPage/>
         },
         {
             path: "/login",
@@ -34,6 +38,11 @@ export const routerOptions : RouteObject = {
             element: <RecipesPage/>,
             loader: getAllRecipes
         },
+        {
+            path:"/add",
+            element: <RecipesPage/>,
+            loader: getAllRecipes
+        }
     ]
 }
 

@@ -25,9 +25,9 @@ export async function createUser(user: User): Promise<User> {
 }
 
 // Find all users
-export async function findAllUsers(): Promise<User[]> {
+export async function findAllUsers() {
   const response = await fetch('http://localhost:3000/users');
-  return response.json();
+  return await response.json() as User[];
 }
 
 // Edit a user
