@@ -1,16 +1,21 @@
-export type Recipe = {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  time: number;
-  products: string[];
-  photo: string;
-  details: string;
-  tags: string[];
-  date: Date;
-  lastModified: Date;
-};
+import * as yup from "yup";
+
+const recipeSchema = yup.object().shape({
+  id: yup.string(),
+  userId: yup.string().required(),
+  name: yup.string().required(),
+  description: yup.string().required(),
+  time: yup.number().required(),
+  products: yup.array().of(yup.string()).required(),
+  photo: yup.string().required(),
+  details: yup.string().required(),
+  tags: yup.array().of(yup.string()).required(),
+  date: yup.date().required(),
+  lastModified: yup.date().required(),
+});
+
+export type Recipe = yup.InferType<typeof recipeSchema>;
+
 
 const server = "http://localhost:3000";
 

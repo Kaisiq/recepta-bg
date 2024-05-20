@@ -1,16 +1,37 @@
+import * as yup from 'yup';
+
+export enum RoleType {
+  user = 1,
+  admin = 2,
+}
+export enum StatusType {
+  active = 1, suspended, deactivated,
+}
+
 export interface User {
   id: number;
   name: string;
   username: string;
   password: string;
   gender: string;
-  role: "user" | "admin";
+  role: RoleType;
   avatar: string;
   bio: string;
-  status: "active" | "suspended" | "deactivated";
+  status: StatusType;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export const userValidationSchema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
+  gender: yup.string().required('Gender is required'),
+  role: yup.number().required('Role is required'),
+  avatar: yup.string(),
+  bio: yup.string(),
+});
+
 
 const server = "http://localhost:3000";
 
