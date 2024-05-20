@@ -1,13 +1,15 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:4053232364.
 export interface User {
   id: number;
+  name: string;
   username: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
+  gender: string;
+  role: "user" | "admin";
+  avatar: string;
+  bio: string;
+  status: "active" | "suspended" | "deactivated";
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const server = "http://localhost:3000";
@@ -15,9 +17,9 @@ const server = "http://localhost:3000";
 // Create a user
 export async function createUser(user: User): Promise<User> {
   const response = await fetch(`${server}/users`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user),
   });
@@ -26,16 +28,16 @@ export async function createUser(user: User): Promise<User> {
 
 // Find all users
 export async function findAllUsers() {
-  const response = await fetch('http://localhost:3000/users');
-  return await response.json() as User[];
+  const response = await fetch("http://localhost:3000/users");
+  return (await response.json()) as User[];
 }
 
 // Edit a user
 export async function editUser(user: User): Promise<User> {
   const response = await fetch(`http://localhost:3000/users/${user.id}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user),
   });
@@ -45,7 +47,7 @@ export async function editUser(user: User): Promise<User> {
 // Delete a user
 export async function deleteUser(id: number): Promise<void> {
   await fetch(`http://localhost:3000/users/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
 }
 
@@ -58,7 +60,9 @@ export async function userExists(username: string): Promise<boolean> {
 
 // Check for username and password combination
 export async function checkUserCredentials(username: string, password: string): Promise<boolean> {
-  const response = await fetch(`http://localhost:3000/users?username=${username}&password=${password}`);
+  const response = await fetch(
+    `http://localhost:3000/users?username=${username}&password=${password}`
+  );
   const users = await response.json();
   return users.length > 0;
 }

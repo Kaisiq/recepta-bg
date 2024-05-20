@@ -6,9 +6,11 @@ import { User } from "../services/user-service";
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [bio, setBio] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
@@ -19,8 +21,9 @@ const RegisterPage = () => {
         setErrorMessage("User already exists");
         return;
       }
+      const status = "active";
 
-      await createUser({ username, password, email, firstName, lastName } as User);
+      await createUser({ username, password, name, gender, role, avatar, bio, status } as User);
       navigate("/login");
     } catch (error: any) {
       setErrorMessage(error.message);
@@ -43,22 +46,34 @@ const RegisterPage = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
       <input
         type="text"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
+        placeholder="Gender"
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
       />
       <input
         type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
+        placeholder="Role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Avatar"
+        value={avatar}
+        onChange={(e) => setAvatar(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="bio"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
       />
       <button onClick={handleRegister}>Register</button>
       {errorMessage && <p>{errorMessage}</p>}

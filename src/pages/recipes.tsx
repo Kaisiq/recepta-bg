@@ -1,5 +1,5 @@
-import { Recipe } from '../services/recipe-service';
-import { useLoaderData } from 'react-router-dom';
+import { Recipe } from "../services/recipe-service";
+import { useLoaderData } from "react-router-dom";
 
 const RecipesPage = () => {
   const recipes = useLoaderData() as Recipe[];
@@ -8,8 +8,7 @@ const RecipesPage = () => {
     <div>
       {recipes.map((recipe) => (
         <>
-        <div key={recipe.id}>{recipe.name}</div>
-        <div>asd</div>
+          <div key={recipe.id}>{recipe.name}</div>
         </>
       ))}
     </div>
