@@ -3,6 +3,7 @@ import App from "./App.tsx";
 import Layout from "./components/Layout.tsx";
 import RecipesPage from "./pages/recipes.tsx";
 import { getAllRecipes } from "./services/recipe-service.ts";
+import { LoginPage } from "./pages/login.tsx";
 
 export const routerOptions : RouteObject = {
     path: "/",
@@ -22,10 +23,10 @@ export const routerOptions : RouteObject = {
         },
         {
             path: "/login",
-            element: <App/>
+            element: <LoginPage/>
         },
         {
-            path: "/signup",
+            path: "/register",
             element: <App/>
         },
         {
