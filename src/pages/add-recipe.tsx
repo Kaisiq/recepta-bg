@@ -1,41 +1,63 @@
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Recipe, addRecipe, editRecipe } from "../services/recipe-service";
-import { recipeSchema } from "../services/recipe-service";
-import { redirect, useLocation } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Recipe, addRecipe, editRecipe } from '../services/recipe-service';
+import { redirect, useLocation } from 'react-router-dom';
+import * as yup from 'yup';
 
 const AddRecipePage = () => {
-  const user = window.sessionStorage.getItem("user");
-  if (!user) throw new Error("impossible");
+  const user = window.sessionStorage.getItem('user');
+  if (!user) throw new Error('impossible');
+
+  const userId = JSON.parse(user).id;
 
   const location = useLocation();
   const recipe = location.state as Recipe | undefined;
+
+  const parsedRecipe = {
+    ...recipe,
+    products: recipe?.products.join(', '),
+    tags: recipe?.tags.join(', '),
+    userId: recipe?.userId || userId,
+  };
+
+  const validateSchema = yup.object().shape({
+    id: yup.string(),
+    userId: yup.string().required(),
+    name: yup.string().required(),
+    description: yup.string().required(),
+    time: yup.number().required().positive().integer(),
+    products: yup.string().required(),
+    photo: yup.string().required(),
+    details: yup.string().required(),
+    tags: yup.string().required(),
+    createdAt: yup.date().required(),
+    updatedAt: yup.date().required(),
+  });
+
+  type ValidatedRecipe = yup.InferType<typeof validateSchema>;
+
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(recipeSchema),
-    defaultValues: recipe,
+  } = useForm<ValidatedRecipe>({
+    resolver: yupResolver(validateSchema),
+    defaultValues: parsedRecipe,
   });
 
-  console.log(recipe);
-
-  const onSubmit = (data: Recipe) => {
-    data = { ...data, userId: JSON.parse(user).id };
-    if (recipe) {
-      editRecipe(data)
-        .then(() => {
-          return redirect("/");
-        })
-        .catch((err) => console.log(err));
-    } else {
-      addRecipe(data)
-        .then(() => {
-          return redirect("/");
-        })
-        .catch((err) => console.log(err));
-    }
+  const onSubmit = (data: ValidatedRecipe) => {
+    const parsedData: Recipe = {
+      ...data,
+      products: data.products.split(',').map(el => el.trim()),
+      tags: data.tags.split(',').map(el => el.trim()),
+    };
+    const saveRecipe = recipe ? editRecipe : addRecipe;
+    saveRecipe(parsedData)
+      .then(() => {
+        return redirect('/');
+      })
+      .catch(err => console.log(err));
   };
 
   return (
