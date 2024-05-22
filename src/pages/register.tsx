@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUser, userExists } from "../services/user-service";
+import { RoleType, StatusType, createUser, userExists } from "../services/user-service";
 import { User } from "../services/user-service";
 
 const RegisterPage = () => {
@@ -8,7 +8,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<RoleType>();
   const [avatar, setAvatar] = useState("");
   const [bio, setBio] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -21,8 +21,7 @@ const RegisterPage = () => {
         setErrorMessage("User already exists");
         return;
       }
-      const status = "active";
-
+      const status = StatusType.active;
       await createUser({ username, password, name, gender, role, avatar, bio, status } as User);
       navigate("/login");
     } catch (error: any) {
@@ -61,7 +60,7 @@ const RegisterPage = () => {
         type="text"
         placeholder="Role"
         value={role}
-        onChange={(e) => setRole(e.target.value)}
+        onChange={(e) => setRole(Number(e.target.value))}
       />
       <input
         type="text"

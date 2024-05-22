@@ -2,16 +2,23 @@ import { RouteObject } from "react-router-dom";
 import App from "./App.tsx";
 import Layout from "./components/Layout.tsx";
 import RecipesPage from "./pages/recipes.tsx";
-import { getAllRecipes } from "./services/recipe-service.ts";
+import { getAllRecipes, getLatestRecipes } from "./services/recipe-service.ts";
 import { LoginPage } from "./pages/login.tsx";
 import RegisterPage from "./pages/register.tsx";
 import UsersPage from "./pages/users.tsx";
 import { findAllUsers } from "./services/user-service.ts";
+import HomePage from "./pages/home.tsx";
+import AddRecipePage from "./pages/add-recipe.tsx";
 
 export const routerOptions : RouteObject = {
     path: "/",
     element: <Layout/>,
     children: [
+        {
+            path: "/",
+            element: <HomePage/>,
+            loader: getLatestRecipes
+        },
         {
             path: "/users",
             element: <UsersPage/>,
@@ -30,18 +37,13 @@ export const routerOptions : RouteObject = {
             element: <LoginPage/>
         },
         {
-            path: "/register",
-            element: <App/>
-        },
-        {
             path:"/recipes",
             element: <RecipesPage/>,
             loader: getAllRecipes
         },
         {
             path:"/add",
-            element: <RecipesPage/>,
-            loader: getAllRecipes
+            element: <AddRecipePage/>,
         }
     ]
 }

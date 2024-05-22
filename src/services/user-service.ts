@@ -9,10 +9,10 @@ export enum StatusType {
 }
 
 const userSchema = yup.object().shape({
-  id: yup.number(),
+  id: yup.number().max(24),
   name: yup.string(),
-  username: yup.string(),
-  password: yup.string(),
+  username: yup.string().max(15),
+  password: yup.string().min(8).matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/),
   gender: yup.string(),
   role: yup.number().oneOf([1, 2]),
   avatar: yup.string(),

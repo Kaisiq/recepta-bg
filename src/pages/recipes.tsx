@@ -1,8 +1,9 @@
-import { Recipe } from "../services/recipe-service";
-import { useLoaderData } from "react-router-dom";
+import { Recipe, removeRecipe } from "../services/recipe-service";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const RecipesPage = () => {
   const recipes = useLoaderData() as Recipe[];
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -17,6 +18,8 @@ const RecipesPage = () => {
             <p>{recipe.details}</p>
             <p>Tags: {recipe.tags.join(', ')}</p>
             <p>Last Modified: {recipe.updatedAt.toLocaleDateString()}</p>
+            <button onClick={() => navigate(`/add`, { state: recipe })}>Edit</button>
+            <button onClick={() => removeRecipe(recipe.id)}>Delete</button>
           </div>
         </>
       ))}
