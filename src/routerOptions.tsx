@@ -6,50 +6,49 @@ import { getAllRecipes, getLatestRecipes } from "./services/recipe-service.ts";
 import { LoginPage } from "./pages/login.tsx";
 import RegisterPage from "./pages/register.tsx";
 import UsersPage from "./pages/users.tsx";
-import { findAllUsers } from "./services/user-service.ts";
+import { checkUserLogged, findAllUsers } from "./services/user-service.ts";
 import HomePage from "./pages/home.tsx";
 import AddRecipePage from "./pages/add-recipe.tsx";
 
-export const routerOptions : RouteObject = {
-    path: "/",
-    element: <Layout/>,
-    children: [
-        {
-            path: "/",
-            element: <HomePage/>,
-            loader: getLatestRecipes
-        },
-        {
-            path: "/users",
-            element: <UsersPage/>,
-            loader: findAllUsers
-        },
-        {
-            path: "/logout",
-            element: <App/>
-        },
-        {
-            path: "/register",
-            element: <RegisterPage/>
-        },
-        {
-            path: "/login",
-            element: <LoginPage/>
-        },
-        {
-            path:"/recipes",
-            element: <RecipesPage/>,
-            loader: getAllRecipes
-        },
-        {
-            path:"/add",
-            element: <AddRecipePage/>,
-        }
-    ]
-}
+export const routerOptions: RouteObject = {
+  path: "/",
+  element: <Layout />,
+  children: [
+    {
+      path: "/",
+      element: <HomePage />,
+      loader: getLatestRecipes,
+    },
+    {
+      path: "/users",
+      element: <UsersPage />,
+      loader: findAllUsers,
+    },
+    {
+      path: "/logout",
+      element: <App />,
+    },
+    {
+      path: "/register",
+      element: <RegisterPage />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/recipes",
+      element: <RecipesPage />,
+      loader: getAllRecipes,
+    },
+    {
+      path: "/add",
+      element: <AddRecipePage />,
+      loader: checkUserLogged,
+    },
+  ],
+};
 
 export default routerOptions;
 
-export const routes = [
-    routerOptions
-]
+export const routes = [routerOptions];

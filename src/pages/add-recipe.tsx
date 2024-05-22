@@ -1,55 +1,97 @@
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Recipe, addRecipe, editRecipe } from "../services/recipe-service";
 import { recipeSchema } from "../services/recipe-service";
-import { useLocation, useNavigate } from "react-router-dom";
+import { redirect, useLocation } from "react-router-dom";
 
 const AddRecipePage = () => {
-  const navigate = useNavigate();
   const user = window.sessionStorage.getItem("user");
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
-  
+  if (!user) throw new Error("impossible");
+
   const location = useLocation();
-  const recipe = location.state?.recipe as Recipe | undefined;
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const recipe = location.state as Recipe | undefined;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(recipeSchema),
-    defaultValues: recipe
+    defaultValues: recipe,
   });
+
+  console.log(recipe);
 
   const onSubmit = (data: Recipe) => {
     data = { ...data, userId: JSON.parse(user).id };
-    if(recipe){
-      editRecipe(data).then(() => {
-        navigate("/");
-      }).catch(err => console.log(err))
-    }
-    else{
-      addRecipe(data).then(() => {
-        navigate("/");
-      }).catch(err => console.log(err));
+    if (recipe) {
+      editRecipe(data)
+        .then(() => {
+          return redirect("/");
+        })
+        .catch((err) => console.log(err));
+    } else {
+      addRecipe(data)
+        .then(() => {
+          return redirect("/");
+        })
+        .catch((err) => console.log(err));
     }
   };
 
   return (
-    <div className="m-5">
+    <div className="m-5 w-full">
       <h1>Add Recipe</h1>
-      <form className="flex flex-col gap-2 mt-2 p-4 border-2 border-black rounded-md" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-        <input className="p-2 rounded-md" type="text" {...register("name")} placeholder="Name" />
+      <form
+        className="mx-auto min-w-[65vw] flex flex-col gap-2 mt-2 p-4 border-2 border-black rounded-md"
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <input
+          className="p-2 rounded-md"
+          type="text"
+          {...register("name")}
+          placeholder="Name"
+        />
         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-        <input className="p-2 rounded-md" type="text" {...register("description")} placeholder="Description" />
+        <input
+          type="text"
+          className="p-2 rounded-md"
+          {...register("description")}
+          placeholder="Description"
+        />
         {errors.description && <p className="text-red-500">{errors.description.message}</p>}
-        <input className="p-2 rounded-md" type="number" {...register("time")} placeholder="Time" />
+        <input
+          className="p-2 rounded-md"
+          type="number"
+          {...register("time")}
+          placeholder="Time"
+        />
         {errors.time && <p className="text-red-500">{errors.time.message}</p>}
-        <input className="p-2 rounded-md" type="text" {...register("products")} placeholder="Products" />
+        <textarea
+          className="p-2 rounded-md"
+          {...register("products")}
+          placeholder="Products"
+        />
         {errors.products && <p className="text-red-500">{errors.products.message}</p>}
-        <input className="p-2 rounded-md" type="text" {...register("photo")} placeholder="Photo" />
+        <input
+          className="p-2 rounded-md"
+          type="text"
+          {...register("photo")}
+          placeholder="Photo"
+        />
         {errors.photo && <p className="text-red-500">{errors.photo.message}</p>}
-        <input className="p-2 rounded-md" type="text" {...register("details")} placeholder="Details" />
+        <textarea
+          className="p-2 rounded-md"
+          {...register("details")}
+          placeholder="Details"
+        />
         {errors.details && <p className="text-red-500">{errors.details.message}</p>}
-        <input className="p-2 rounded-md" type="text" {...register("tags")} placeholder="Tags" />
+        <input
+          className="p-2 rounded-md"
+          type="text"
+          {...register("tags")}
+          placeholder="Tags"
+        />
         {errors.tags && <p className="text-red-500">{errors.tags.message}</p>}
         <button type="submit">Save</button>
       </form>

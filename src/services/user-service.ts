@@ -1,29 +1,34 @@
-import * as yup from 'yup';
+import { redirect } from "react-router-dom";
+import * as yup from "yup";
 
 export enum RoleType {
   user = 1,
   admin = 2,
 }
 export enum StatusType {
-  active = 1, suspended, deactivated,
+  active = 1,
+  suspended,
+  deactivated,
 }
 
 const userSchema = yup.object().shape({
   id: yup.number().max(24),
   name: yup.string(),
   username: yup.string().max(15),
-  password: yup.string().min(8).matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/),
+  password: yup
+    .string()
+    .min(8)
+    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/),
   gender: yup.string(),
   role: yup.number().oneOf([1, 2]),
   avatar: yup.string(),
   bio: yup.string(),
-  status: yup.number().oneOf([1,2,3]),
+  status: yup.number().oneOf([1, 2, 3]),
   createdAt: yup.date(),
   updatedAt: yup.date(),
 });
 
 export type User = yup.InferType<typeof userSchema>;
-
 
 const server = "http://localhost:3000";
 
@@ -37,6 +42,14 @@ export async function createUser(user: User): Promise<User> {
     body: JSON.stringify(user),
   });
   return response.json();
+}
+
+export async function checkUserLogged() {
+  const user = sessionStorage.getItem("user");
+  if (!user) {
+    return redirect("/login");
+  }
+  return null;
 }
 
 // Find all users
