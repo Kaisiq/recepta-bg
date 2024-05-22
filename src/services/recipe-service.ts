@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-const recipeSchema = yup.object().shape({
+export const recipeSchema = yup.object().shape({
   id: yup.string(),
   userId: yup.string().required(),
   name: yup.string().required(),
@@ -44,7 +44,10 @@ const server = "http://localhost:3000";
   }
   
   // Remove recipe
-  export async function removeRecipe(id: number) {
+  export async function removeRecipe(id: string | undefined) {
+    if(!id){
+      return null;
+    }
     const response = await fetch(`http://localhost:9000/recipes/${id}`, {
       method: 'DELETE'
     });

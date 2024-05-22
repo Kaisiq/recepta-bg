@@ -13,6 +13,7 @@ export const LoginPage = () => {
   const handleLogin = async () => {
     const user = await checkUserCredentials(username, password);
     if (user) {
+      window.sessionStorage.setItem('user', JSON.stringify(user));
       navigate('/home');
     } else {
       alert('Invalid credentials');
@@ -20,11 +21,15 @@ export const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
-    </div>
+    <>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
+          <h1 className="text-black text-2xl font-bold mb-4">Влизане</h1>
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg mb-4" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg mb-4" />
+          <button onClick={handleLogin} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Login</button>
+        </div>
+      </div>
+    </>
   );
 };
