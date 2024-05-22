@@ -4,25 +4,27 @@ import { RoleType, StatusType, createUser, userExists } from "../services/user-s
 import { User } from "../services/user-service";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [role, setRole] = useState<RoleType>();
-  const [avatar, setAvatar] = useState("");
-  const [bio, setBio] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState<User>({
+    username: "",
+    password: "",
+    name: "",
+    gender: "",
+    role: undefined,
+    avatar: "",
+    bio: "",
+    status: StatusType.active,
+  });
+  const [errorMessage,setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   const handleRegister = async () => {
     try {
-      const existingUser = await userExists(username);
+      const existingUser = await userExists(user.username!);
       if (existingUser) {
         setErrorMessage("User already exists");
         return;
       }
-      const status = StatusType.active;
-      await createUser({ username, password, name, gender, role, avatar, bio, status } as User);
+      await createUser({ ...user } as User);
       navigate("/login");
     } catch (error: any) {
       setErrorMessage(error.message);
@@ -30,53 +32,71 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Gender"
-        value={gender}
-        onChange={(e) => setGender(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Role"
-        value={role}
-        onChange={(e) => setRole(Number(e.target.value))}
-      />
-      <input
-        type="text"
-        placeholder="Avatar"
-        value={avatar}
-        onChange={(e) => setAvatar(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="bio"
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
-      />
-      <button onClick={handleRegister}>Register</button>
-      {errorMessage && <p>{errorMessage}</p>}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+        <h1 className="text-black text-2xl font-bold text-center">Register</h1>
+        <input
+          type="text"
+          placeholder="Username"
+          value={user.username}
+          onChange={(e) => setUser({...user, username: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={user.password}
+          onChange={(e) => setUser({...user, password: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          placeholder="Name"
+          value={user.name}
+          onChange={(e) => setUser({...user, name: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          placeholder="Gender"
+          value={user.gender}
+          onChange={(e) => setUser({...user, gender: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <select
+          value={user.role}
+          onChange={(e) => setUser({...user, role: Number(e.target.value) as RoleType})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value={RoleType.user}>User</option>
+          <option value={RoleType.admin}>Admin</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Avatar"
+          value={user.avatar}
+          onChange={(e) => setUser({...user, avatar: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          placeholder="Bio"
+          value={user.bio}
+          onChange={(e) => setUser({...user, bio: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          onClick={handleRegister}
+          className="w-full py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Register
+        </button>
+        {errorMessage && (
+          <p className="mt-2 text-sm text-center text-red-500">{errorMessage}</p> 
+        )}
+      </div>
     </div>
+    
   );
 };
 
