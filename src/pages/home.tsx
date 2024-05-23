@@ -8,45 +8,42 @@ const HomePage = () => {
 
   const [authorFilter, setAuthorFilter] = useState<string[]>([]);
   const [tagFilter, setTagFilter] = useState<string[]>([]);
-  const [filteredByAuthor, setFilteredByAuthor] = useState<Recipe[]>(recipes);
-  const [filteredByTag, setFilteredByTag] = useState<Recipe[]>(recipes);
+  const [filtered, setFiltered] = useState<Recipe[]>(recipes);
 
   const handleAuthorFilter = (filter: string) => {
     if (!filter) {
       setAuthorFilter([]);
+    } else {
+      setAuthorFilter(filter.split(",").map((el) => el.trim()));
     }
-    setAuthorFilter(filter.split(",").map(el => el.trim()));
   };
+
   const handleTagFilter = (filter: string) => {
     if (!filter) {
       setTagFilter([]);
+    } else {
+      setTagFilter(filter.split(",").map((el) => el.trim()));
     }
-    setTagFilter(filter.split(",").map(el => el.trim()));
   };
 
   useEffect(() => {
-    if (authorFilter.length > 0) {
-      setFilteredByAuthor(
-        recipes.filter((recipe) =>
-          authorFilter.every((author) => recipe.userId.includes(author))
-        )
-      );
-    } else {
-      setFilteredByAuthor(recipes);
-    }
-  }, [authorFilter, recipes]);
+    let filteredRecipes = recipes;
 
-  useEffect(() => {
-    if (tagFilter.length > 0) {
-      setFilteredByTag(
-        filteredByAuthor.filter((recipe) =>
-          tagFilter.every((tag) => recipe.tags.includes(tag))
-        )
+    if (authorFilter.length > 0) {
+      filteredRecipes = filteredRecipes.filter((recipe) =>
+        authorFilter.every((author) => recipe.tags.some((recipeTag) => recipeTag.includes(author)))
       );
-    } else {
-      setFilteredByTag(filteredByAuthor);
     }
-  }, [tagFilter, filteredByAuthor]);
+
+    if (tagFilter.length > 0) {
+      console.log(tagFilter, recipes[0].tags);
+      filteredRecipes = filteredRecipes.filter((recipe) =>
+        tagFilter.every((tag) => recipe.tags.some((recipeTag) => recipeTag.includes(tag)))
+      );
+    }
+
+    setFiltered(filteredRecipes);
+  }, [authorFilter, tagFilter, recipes]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -55,19 +52,22 @@ const HomePage = () => {
         handleTagFilter={handleTagFilter}
         handleAuthorFilter={handleAuthorFilter}
       />
-      {filteredByTag
-      .sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt)))
-      .map((recipe) => {
-        const date = new Date(recipe.updatedAt);
-        return (
-          <div key={recipe.id}>
-            <h2>{recipe.name}</h2>
-            <img src={recipe.photo} alt={recipe.name} />
-            <p>{recipe.description.substring(0, 150)}...</p>
-            <p>Products: {recipe.products.join(", ")}</p>
-            <p>Last Modified: {date.toLocaleDateString()}</p>
-          </div>
-        );  
+      {filtered
+        .sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt)))
+        .map((recipe) => {
+          const date = new Date(recipe.updatedAt);
+          return (
+            <div key={recipe.id}>
+              <h2>{recipe.name}</h2>
+              <img
+                src={recipe.photo}
+                alt={recipe.name}
+              />
+              <p>{recipe.description.substring(0, 150)}...</p>
+              <p>Products: {recipe.products.join(", ")}</p>
+              <p>Last Modified: {date.toLocaleDateString()}</p>
+            </div>
+          );
         })}
     </div>
   );
