@@ -1,34 +1,5 @@
 import { redirect } from "react-router-dom";
-import * as yup from "yup";
-
-export enum RoleType {
-  user = 1,
-  admin = 2,
-}
-export enum StatusType {
-  active = 1,
-  suspended,
-  deactivated,
-}
-
-const userSchema = yup.object().shape({
-  id: yup.number().max(24),
-  name: yup.string(),
-  username: yup.string().max(15).matches(/^[a-zA-Z0-9]+$/),
-  password: yup
-    .string()
-    .min(8)
-    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/),
-  gender: yup.string(),
-  role: yup.number().oneOf([RoleType.user, RoleType.admin]),
-  avatar: yup.string(),
-  bio: yup.string().max(512),
-  status: yup.number().oneOf([StatusType.active, StatusType.deactivated, StatusType.suspended]),
-  createdAt: yup.date().default(() => new Date()),
-  updatedAt: yup.date().default(() => new Date()),
-});
-
-export type User = yup.InferType<typeof userSchema>;
+import { User } from "../model/user";
 
 const server = "http://localhost:3000";
 
@@ -87,9 +58,7 @@ export async function userExists(username: string): Promise<boolean> {
 
 // Check for username and password combination
 export async function checkUserCredentials(username: string, password: string): Promise<boolean> {
-  const response = await fetch(
-    `${server}/users?username=${username}&password=${password}`
-  );
+  const response = await fetch(`${server}/users?username=${username}&password=${password}`);
   const users = await response.json();
   return users.length > 0;
 }

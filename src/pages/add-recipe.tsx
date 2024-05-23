@@ -1,12 +1,32 @@
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Recipe, addRecipe, editRecipe } from '../services/recipe-service';
-import { useLocation, useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Recipe, RecipeCreateDTO } from "../model/recipe";
+import { addRecipe, editRecipe } from "../services/recipe-service";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { BaseSyntheticEvent } from "react";
+
+const validateSchema = yup.object().shape({
+  userId: yup.string().required().max(24),
+  name: yup.string().required().max(80),
+  description: yup.string().required().max(256),
+  time: yup.number().required().positive().integer(),
+  products: yup.string().required(),
+  photo: yup
+    .string()
+    .required()
+    .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/),
+  details: yup.string().required().max(2048),
+  tags: yup.string().required(),
+  createdAt: yup.date().optional(),
+  updatedAt: yup.date(),
+});
+
+type ValidatedRecipe = yup.InferType<typeof validateSchema>;
 
 const AddRecipePage = () => {
-  const user = window.sessionStorage.getItem('user');
-  if (!user) throw new Error('impossible');
+  const user = window.sessionStorage.getItem("user");
+  if (!user) throw new Error("impossible");
   const navigate = useNavigate();
 
   const userId = JSON.parse(user).id;
@@ -14,56 +34,65 @@ const AddRecipePage = () => {
   const location = useLocation();
   const recipe = location.state as Recipe | undefined;
 
-  const parsedRecipe = {
-    ...recipe,
-    products: recipe?.products.join(', '),
-    tags: recipe?.tags.join(', '),
-    userId: recipe?.userId || userId,
-  };
-
-  const validateSchema = yup.object().shape({
-    id: yup.string(),
-    userId: yup.string().required(),
-    name: yup.string().required(),
-    description: yup.string().required(),
-    time: yup.number().required().positive().integer(),
-    products: yup.string().required(),
-    photo: yup.string().required(),
-    details: yup.string().required(),
-    tags: yup.string().required(),
-    createdAt: yup.date().required(),
-    updatedAt: yup.date().required(),
-  });
-
-  type ValidatedRecipe = yup.InferType<typeof validateSchema>;
-
+  const parsedRecipe = recipe
+    ? {
+        ...recipe,
+        products: recipe.products.join(", "),
+        tags: recipe.tags.join(", "),
+        userId: recipe.userId || userId,
+      }
+    : {
+        userId,
+        name: "",
+        description: "",
+        time: 0, // Ensure this is a number and not undefined
+        products: "",
+        photo: "",
+        details: "",
+        tags: "",
+      };
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty, isValid },
   } = useForm<ValidatedRecipe>({
     resolver: yupResolver(validateSchema),
+    mode: "onChange",
     defaultValues: parsedRecipe,
   });
 
-  const onSubmit = (data: ValidatedRecipe) => {
-    const parsedData: Recipe = {
+  const onSubmit = (
+    data: ValidatedRecipe,
+    event: BaseSyntheticEvent<object, any, any> | undefined
+  ) => {
+    event?.preventDefault();
+    const parsedData: RecipeCreateDTO = {
       ...data,
-      products: data.products.split(',').map(el => el.trim()),
-      tags: data.tags.split(',').map(el => el.trim()),
+      products: data.products.split(",").map((el) => el.trim()),
+      tags: data.tags.split(",").map((el) => el.trim()),
+      createdAt: data.createdAt || new Date(),
+      updatedAt: new Date(),
     };
+    console.log("Submitting data:", parsedData);
+    reset({ ...parsedRecipe });
+
+    let toSave = { ...parsedData } as Recipe;
+    if (recipe) {
+      toSave.id = recipe.id;
+    }
     const saveRecipe = recipe ? editRecipe : addRecipe;
-    saveRecipe(parsedData)
+    saveRecipe(toSave)
       .then(() => {
-        navigate('/');
+        navigate("/");
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.error("Error saving recipe:", err));
   };
 
   return (
     <div className="m-5 w-full">
-      <h1>Add Recipe</h1>
+      <h1>{recipe ? "Edit Recipe" : "Add Recipe"}</h1>
       <form
         className="mx-auto min-w-[65vw] flex flex-col gap-2 mt-2 p-4 border-2 border-black rounded-md"
         autoComplete="off"
@@ -116,7 +145,12 @@ const AddRecipePage = () => {
           placeholder="Tags"
         />
         {errors.tags && <p className="text-red-500">{errors.tags.message}</p>}
-        <button type="submit">Save</button>
+        <button
+          type="submit"
+          disabled={!(isDirty && isValid)}
+        >
+          Save
+        </button>
       </form>
     </div>
   );

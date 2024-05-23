@@ -1,22 +1,4 @@
-import * as yup from "yup";
-
-export const recipeSchema = yup.object().shape({
-  id: yup.string().max(24),
-  userId: yup.string().required().max(24),
-  name: yup.string().required().max(80),
-  description: yup.string().required().max(256),
-  time: yup.number().required(),
-  products: yup.array().of(yup.string()).required(),
-  photo: yup.string().required().matches(
-    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-  ),
-  details: yup.string().required().max(2048),
-  tags: yup.array().of(yup.string()).required(),
-  createdAt: yup.date().default(() => new Date()),
-  updatedAt: yup.date().default(() => new Date()),
-});
-
-export type Recipe = yup.InferType<typeof recipeSchema>;
+import { Recipe } from "../model/recipe";
 
 const server = "http://localhost:3000";
 
@@ -33,7 +15,7 @@ export async function getLatestRecipes() {
 }
 
 // Add recipe
-export async function addRecipe(recipe: Recipe) {
+export async function addRecipe(recipe: Recipe): Promise<Recipe> {
   const response = await fetch(`${server}/recipes`, {
     method: "POST",
     headers: {

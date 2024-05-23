@@ -1,6 +1,3 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:667480365.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:587100720.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2158931211.
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkUserCredentials } from "../services/user-service";

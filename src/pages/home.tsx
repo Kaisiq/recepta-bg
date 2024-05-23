@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom";
-import { Recipe } from "../services/recipe-service";
+import { Recipe } from "../model/recipe";
 
 const HomePage = () => {
   const recipes = useLoaderData() as Recipe[];
@@ -7,7 +7,10 @@ const HomePage = () => {
     <div className="flex flex-col gap-5">
       <h1>Home Page</h1>
       {recipes.map((recipe) => (
-        <div className="flex items-center justify-center w-full h-full">
+        <div
+          key={recipe.id}
+          className="flex items-center justify-center w-full h-full"
+        >
           <h2 className="text-xl font-bold">{recipe.name}</h2>
           <img
             src={recipe.photo}
