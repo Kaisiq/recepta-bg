@@ -24,6 +24,8 @@ const validateSchema = yup.object().shape({
 
 type ValidatedRecipe = yup.InferType<typeof validateSchema>;
 
+//TODO : fix adding new recipe
+
 const AddRecipePage = () => {
   const user = window.sessionStorage.getItem("user");
   if (!user) throw new Error("impossible");
