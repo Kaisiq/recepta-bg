@@ -1,17 +1,19 @@
 import * as yup from "yup";
 
 export const recipeSchema = yup.object().shape({
-  id: yup.string(),
-  userId: yup.string().required(),
-  name: yup.string().required(),
-  description: yup.string().required(),
+  id: yup.string().max(24),
+  userId: yup.string().required().max(24),
+  name: yup.string().required().max(80),
+  description: yup.string().required().max(256),
   time: yup.number().required(),
   products: yup.array().of(yup.string()).required(),
-  photo: yup.string().required(),
-  details: yup.string().required(),
+  photo: yup.string().required().matches(
+    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+  ),
+  details: yup.string().required().max(2048),
   tags: yup.array().of(yup.string()).required(),
-  createdAt: yup.date().required(),
-  updatedAt: yup.date().required(),
+  createdAt: yup.date().default(() => new Date()),
+  updatedAt: yup.date().default(() => new Date()),
 });
 
 export type Recipe = yup.InferType<typeof recipeSchema>;
@@ -55,6 +57,7 @@ export async function removeRecipe(id: string | undefined) {
 
 // Edit recipe
 export async function editRecipe(recipe: Recipe) {
+  recipe.updatedAt = new Date();
   const response = await fetch(`${server}/recipes/${recipe.id}`, {
     method: "PUT",
     headers: {

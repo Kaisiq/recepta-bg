@@ -14,18 +14,18 @@ export enum StatusType {
 const userSchema = yup.object().shape({
   id: yup.number().max(24),
   name: yup.string(),
-  username: yup.string().max(15),
+  username: yup.string().max(15).matches(/^[a-zA-Z0-9]+$/),
   password: yup
     .string()
     .min(8)
     .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/),
   gender: yup.string(),
-  role: yup.number().oneOf([1, 2]),
+  role: yup.number().oneOf([RoleType.user, RoleType.admin]),
   avatar: yup.string(),
-  bio: yup.string(),
-  status: yup.number().oneOf([1, 2, 3]),
-  createdAt: yup.date(),
-  updatedAt: yup.date(),
+  bio: yup.string().max(512),
+  status: yup.number().oneOf([StatusType.active, StatusType.deactivated, StatusType.suspended]),
+  createdAt: yup.date().default(() => new Date()),
+  updatedAt: yup.date().default(() => new Date()),
 });
 
 export type User = yup.InferType<typeof userSchema>;
@@ -54,13 +54,14 @@ export async function checkUserLogged() {
 
 // Find all users
 export async function findAllUsers() {
-  const response = await fetch("http://localhost:3000/users");
+  const response = await fetch(`${server}/users`);
   return (await response.json()) as User[];
 }
 
 // Edit a user
 export async function editUser(user: User): Promise<User> {
-  const response = await fetch(`http://localhost:3000/users/${user.id}`, {
+  user.updatedAt = new Date();
+  const response = await fetch(`${server}/users/${user.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -72,14 +73,14 @@ export async function editUser(user: User): Promise<User> {
 
 // Delete a user
 export async function deleteUser(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/users/${id}`, {
+  await fetch(`${server}/users/${id}`, {
     method: "DELETE",
   });
 }
 
 // Check if user exists
 export async function userExists(username: string): Promise<boolean> {
-  const response = await fetch(`http://localhost:3000/users?username=${username}`);
+  const response = await fetch(`${server}/users?username=${username}`);
   const users = await response.json();
   return users.length > 0;
 }
@@ -87,7 +88,7 @@ export async function userExists(username: string): Promise<boolean> {
 // Check for username and password combination
 export async function checkUserCredentials(username: string, password: string): Promise<boolean> {
   const response = await fetch(
-    `http://localhost:3000/users?username=${username}&password=${password}`
+    `${server}/users?username=${username}&password=${password}`
   );
   const users = await response.json();
   return users.length > 0;

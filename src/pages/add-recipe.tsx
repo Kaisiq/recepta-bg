@@ -1,12 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Recipe, addRecipe, editRecipe } from '../services/recipe-service';
-import { redirect, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 const AddRecipePage = () => {
   const user = window.sessionStorage.getItem('user');
   if (!user) throw new Error('impossible');
+  const navigate = useNavigate();
 
   const userId = JSON.parse(user).id;
 
@@ -55,7 +56,7 @@ const AddRecipePage = () => {
     const saveRecipe = recipe ? editRecipe : addRecipe;
     saveRecipe(parsedData)
       .then(() => {
-        return redirect('/');
+        navigate('/');
       })
       .catch(err => console.log(err));
   };
