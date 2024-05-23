@@ -22,7 +22,7 @@ const RecipesPage = () => {
             <p>{recipe.details}</p>
             <p>Tags: {recipe.tags.join(", ")}</p>
             <p>Last Modified: {date.toLocaleDateString()}</p>
-            <button onClick={() => navigate(`/add`, { state: recipe })}>Edit</button>
+            <button onClick={() => navigate(`/edit`, { state: recipe })}>Edit</button>
             <button onClick={() => removeRecipe(recipe.id)}>Delete</button>
           </div>
         );

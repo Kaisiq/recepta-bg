@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { RecipeCreateDTO } from "../model/recipe";
-import { addRecipe } from "../services/recipe-service";
-import { useNavigate } from "react-router-dom";
+import { Recipe, RecipeCreateDTO } from "../model/recipe";
+import { addRecipe, editRecipe } from "../services/recipe-service";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { BaseSyntheticEvent } from "react";
 
 const validateSchema = yup.object().shape({
-  // userId: yup.string().required().max(24),
+  userId: yup.string().required().max(24),
   name: yup.string().required().max(80),
   description: yup.string().required().max(256),
   time: yup.number().required().positive().integer(),
@@ -17,35 +18,71 @@ const validateSchema = yup.object().shape({
     .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/),
   details: yup.string().required().max(2048),
   tags: yup.string().required(),
+  createdAt: yup.date().optional(),
+  updatedAt: yup.date(),
 });
 
 type ValidatedRecipe = yup.InferType<typeof validateSchema>;
 
-const AddRecipePage = () => {
+const EditRecipePage = () => {
   const user = window.sessionStorage.getItem("user");
   if (!user) throw new Error("impossible");
   const navigate = useNavigate();
 
   const userId = JSON.parse(user).id;
+
+  const location = useLocation();
+  const recipe = location.state as Recipe | undefined;
+
+  const parsedRecipe = recipe
+    ? {
+        ...recipe,
+        products: recipe.products.join(", "),
+        tags: recipe.tags.join(", "),
+        userId: recipe.userId || userId,
+      }
+    : {
+        userId,
+        name: "",
+        description: "",
+        time: 0,
+        products: "",
+        photo: "",
+        details: "",
+        tags: "",
+      };
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
   } = useForm<ValidatedRecipe>({
     resolver: yupResolver(validateSchema),
     mode: "onChange",
+    defaultValues: parsedRecipe,
   });
 
-  const onSubmit = (data: ValidatedRecipe) => {
-    const toAdd = {
+  const onSubmit = (
+    data: ValidatedRecipe,
+    event: BaseSyntheticEvent<object, any, any> | undefined
+  ) => {
+    event?.preventDefault();
+    const parsedData: RecipeCreateDTO = {
       ...data,
       products: data.products.split(",").map((el) => el.trim()),
       tags: data.tags.split(",").map((el) => el.trim()),
-      userId,
+      createdAt: data.createdAt || new Date(),
       updatedAt: new Date(),
-      createdAt: new Date(),
-    } as RecipeCreateDTO;
-    addRecipe(toAdd)
+    };
+    reset({ ...parsedRecipe });
+
+    let toSave = { ...parsedData } as Recipe;
+    if (recipe) {
+      toSave.id = recipe.id;
+    }
+    const saveRecipe = recipe ? editRecipe : addRecipe;
+    saveRecipe(toSave)
       .then(() => {
         navigate("/");
       })
@@ -54,7 +91,7 @@ const AddRecipePage = () => {
 
   return (
     <div className="m-5 w-full">
-      <h1>Add Recipe</h1>
+      <h1>{recipe ? "Edit Recipe" : "Add Recipe"}</h1>
       <form
         className="mx-auto min-w-[65vw] flex flex-col gap-2 mt-2 p-4 border-2 border-black rounded-md"
         autoComplete="off"
@@ -118,4 +155,4 @@ const AddRecipePage = () => {
   );
 };
 
-export default AddRecipePage;
+export default EditRecipePage;

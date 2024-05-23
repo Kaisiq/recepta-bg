@@ -9,6 +9,7 @@ import UsersPage from "./pages/users.tsx";
 import { checkUserLogged, findAllUsers } from "./services/user-service.ts";
 import HomePage from "./pages/home.tsx";
 import AddRecipePage from "./pages/add-recipe.tsx";
+import EditRecipePage from "./pages/edit-recipe.tsx";
 
 export const routerOptions: RouteObject = {
   path: "/",
@@ -44,6 +45,10 @@ export const routerOptions: RouteObject = {
     {
       path: "/add",
       element: <AddRecipePage />,
+    },
+    {
+      path: "/edit",
+      element: <EditRecipePage />,
       loader: checkUserLogged,
     },
   ],

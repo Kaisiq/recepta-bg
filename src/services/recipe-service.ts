@@ -1,4 +1,4 @@
-import { Recipe } from "../model/recipe";
+import { Recipe, RecipeCreateDTO } from "../model/recipe";
 
 const server = "http://localhost:3000";
 
@@ -15,7 +15,7 @@ export async function getLatestRecipes() {
 }
 
 // Add recipe
-export async function addRecipe(recipe: Recipe): Promise<Recipe> {
+export async function addRecipe(recipe: RecipeCreateDTO): Promise<Recipe> {
   const response = await fetch(`${server}/recipes`, {
     method: "POST",
     headers: {

@@ -42,7 +42,7 @@
   ],
   "recipes": [
     {
-      "updatedAt": "2024-05-23T10:31:29.614Z",
+      "updatedAt": "2024-05-23T17:37:56.836Z",
       "createdAt": "2023-04-02T12:00:00.000Z",
       "tags": [
         "бисквитки",
@@ -63,11 +63,31 @@
         "1/2 чаена лъжичка сол",
         "1 чаша шоколадови парченца"
       ],
-      "time": 33,
+      "time": 35,
       "description": "Вкусни и лесни бисквитки с шоколадови парченца.",
       "name": "Бисквитки с шоколадови парченца",
       "userId": "user1",
       "id": "chocolate-chip-cookies"
+    },
+    {
+      "id": "06db",
+      "tags": [
+        "asd",
+        "biskviti",
+        "top"
+      ],
+      "details": "asd",
+      "photo": "https://mazna.com",
+      "products": [
+        "asd",
+        "asd",
+        "mazna"
+      ],
+      "time": 15,
+      "description": "mazna description",
+      "name": "recipe2",
+      "updatedAt": "2024-05-23T17:38:31.325Z",
+      "createdAt": "2024-05-23T17:38:31.325Z"
     }
   ]
 }
