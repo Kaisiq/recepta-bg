@@ -5,8 +5,6 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 const RecipesPage = () => {
   const recipes = useLoaderData() as Recipe[];
   const navigate = useNavigate();
-
-  //TODO: add filter by tags, author. Show photo, summary(150chars), sorted newest first
   return (
     <div>
       {recipes.map((recipe) => {
