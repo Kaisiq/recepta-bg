@@ -3,9 +3,9 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 const Layout = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-[100vh] flex-col w-full">
-      <nav className="flex flex-row m-auto">
-        <ul className="flex gap-2 flex-row">
+    <div className="min-h-[100vh] flex-col">
+      <nav className="flex content-center p-5 flex-row m-auto text-xl">
+        <ul className="flex gap-5 flex-row m-auto">
           <NavLink to="/">Начало</NavLink>
           <NavLink to="/recipes">Всички рецепти</NavLink>
           <NavLink to="/add">Добави рецепта</NavLink>
@@ -27,7 +27,7 @@ const Layout = () => {
           )}
         </ul>
       </nav>
-      <main className="flex">
+      <main className="flex min-w-[100vw] m-auto">
         <Outlet />
       </main>
     </div>

@@ -19,9 +19,9 @@ export const LoginPage = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h1 className="text-black text-2xl font-bold mb-4">Влизане</h1>
+      <div className="flex flex-col m-auto pt-10">
+        <div className="bg-[#313131] p-8 rounded-lg shadow-lg">
+          <h1 className="text-2xl font-bold mb-4">Влизане</h1>
           <input
             type="text"
             placeholder="Username"

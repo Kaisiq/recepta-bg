@@ -36,7 +36,6 @@ const HomePage = () => {
     }
 
     if (tagFilter.length > 0) {
-      console.log(tagFilter, recipes[0].tags);
       filteredRecipes = filteredRecipes.filter((recipe) =>
         tagFilter.every((tag) => recipe.tags.some((recipeTag) => recipeTag.includes(tag)))
       );
@@ -46,26 +45,37 @@ const HomePage = () => {
   }, [authorFilter, tagFilter, recipes]);
 
   return (
-    <div className="flex flex-col gap-5">
-      <h1>Home Page</h1>
+    <div className="flex flex-col gap-2 w-[90%] m-auto">
+      <h1 className="text-center">Home Page</h1>
       <RecipeFilter
         handleTagFilter={handleTagFilter}
         handleAuthorFilter={handleAuthorFilter}
       />
       {filtered
         .sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt)))
-        .map((recipe) => {
+        .map((recipe, index) => {
           const date = new Date(recipe.updatedAt);
+          const bgColor = index % 2 === 0 ? "bg-[#171717]" : "bg-[#313131]";
           return (
-            <div key={recipe.id}>
-              <h2>{recipe.name}</h2>
+            <div
+              key={recipe.id}
+              className={`flex gap-5 justify-between ${bgColor} p-2 rounded-lg text-lg`}
+            >
+              <h2 className="basis-full">{recipe.name}</h2>
               <img
+                className="basis-full"
                 src={recipe.photo}
                 alt={recipe.name}
               />
-              <p>{recipe.description.substring(0, 150)}...</p>
-              <p>Products: {recipe.products.join(", ")}</p>
-              <p>Last Modified: {date.toLocaleDateString()}</p>
+              <p className="basis-full">
+                {recipe.description.substring(0, 150)}
+                {recipe.description.length > 150 ? "..." : ""}
+              </p>
+              <p className="basis-full">
+                Products: {recipe.products.join(", ").substring(0, 150)}
+                {recipe.products.join(", ").length > 150 ? "..." : ""}
+              </p>
+              <p className="basis-full">Last Modified: {date.toLocaleDateString()}</p>
             </div>
           );
         })}

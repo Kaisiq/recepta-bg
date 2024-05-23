@@ -45,6 +45,7 @@ export const routerOptions: RouteObject = {
     {
       path: "/add",
       element: <AddRecipePage />,
+      loader: checkUserLogged,
     },
     {
       path: "/edit",

@@ -11,8 +11,9 @@ const RecipeFilter = ({
   const [authorFilter, setAuthorFilter] = useState<string>("");
 
   return (
-    <div className="flex justify-center bg-gray-200 p-2 gap-5">
+    <div className="flex text-white justify-center p-2 gap-5">
       <input
+        className="p-2 rounded-lg"
         placeholder="filter by tags"
         value={tagFilter}
         onChange={(event) => {
@@ -22,6 +23,7 @@ const RecipeFilter = ({
         }}
       />
       <input
+        className="p-2 rounded-lg"
         placeholder="filter by author"
         value={authorFilter}
         onChange={(event) => {

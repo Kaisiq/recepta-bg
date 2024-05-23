@@ -42,9 +42,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h1 className="text-black text-2xl font-bold text-center">Register</h1>
+    <div className="m-auto flex flex-col items-center justify-center mt-10">
+      <div className="w-full max-w-md p-8 space-y-6 bg-[#313131] rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold">Регистриране</h1>
         <input
           type="text"
           placeholder="Username"
