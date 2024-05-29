@@ -64,6 +64,8 @@ const HomePage = () => {
               <h2 className="basis-full">{recipe.name}</h2>
               <img
                 className="basis-full"
+                height="150"
+                width="150"
                 src={recipe.photo}
                 alt={recipe.name}
               />

@@ -19,6 +19,8 @@ const RecipesPage = () => {
             <p>Време за приготвяне: {recipe.time} мин</p>
             <p>Продукти: {recipe.products.join(", ")}</p>
             <img
+              height="150"
+              width="150"
               src={recipe.photo}
               alt={recipe.name}
             />

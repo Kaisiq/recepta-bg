@@ -2,10 +2,25 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createUser, editUser, userExists } from "../services/user-service";
 import { RoleType, StatusType, User } from "../model/user";
+import * as yup from "yup";
 
 const RegisterPage = () => {
   const location = useLocation();
   const currentUser = location.state as User | undefined;
+
+  // const validateSchema = yup.object().shape({
+  //   // userId: yup.string().required().max(24),
+  //   username: yup.string().required().max(15),
+  //   password: yup.string().required().min(8),
+  //   gender: yup.string().required(),
+  //   role: yup.number().oneOf([RoleType.admin, RoleType.user]),
+  //   avatar: yup
+  //     .string()
+  //     .required()
+  //     .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/),
+  //   bio: yup.string().required().max(512),
+  //   status: yup.number().required().oneOf([]),
+  // });
 
   const [user, setUser] = useState<User>(
     currentUser
